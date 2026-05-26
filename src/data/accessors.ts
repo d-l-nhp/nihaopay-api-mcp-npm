@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
-import type { Accessors, Endpoint, ErrorCode } from "./types.ts";
+import type { Accessors, Endpoint, ErrorCode } from "./types.js";
 
 async function readYaml<T>(path: string): Promise<T> {
   const raw = await readFile(path, "utf8");

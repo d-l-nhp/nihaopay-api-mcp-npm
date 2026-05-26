@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Accessors, ErrorCode } from "../data/types.ts";
+import type { Accessors, ErrorCode } from "../data/types.js";
 
 export const getErrorCodeSchema = z.object({
   code: z.string().regex(/^[1-5]\d{2}-\d{2,3}$/),

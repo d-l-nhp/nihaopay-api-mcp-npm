@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Accessors, Endpoint } from "../data/types.ts";
+import type { Accessors, Endpoint } from "../data/types.js";
 
 export const listEndpointsSchema = z.object({
   product: z.string().optional(),

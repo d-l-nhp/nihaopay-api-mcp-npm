@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import matter from "gray-matter";
-import { walk } from "../../scripts/lib/walk.ts";
+import { walk } from "../utils/walk.js";
 
 /**
  * Walk a content directory and build a map from frontmatter `id` to the file's

@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import matter from "gray-matter";
+import { walk } from "../src/utils/walk.ts";
 import { type Chunk, chunkMarkdown } from "./lib/chunker.ts";
-import { walk } from "./lib/walk.ts";
 
 export type BuildIndexOptions = {
   contentDir: string;

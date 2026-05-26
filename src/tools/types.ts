@@ -1,5 +1,5 @@
-import type { Accessors } from "../data/types.ts";
-import type { Bm25Index } from "../retrieval/types.ts";
+import type { Accessors } from "../data/types.js";
+import type { Bm25Index } from "../retrieval/types.js";
 
 export type ToolContext = {
   accessors: Accessors;

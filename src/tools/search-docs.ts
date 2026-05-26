@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { search } from "../retrieval/bm25.ts";
-import { applyBoosts } from "../retrieval/boosts.ts";
-import { buildHint, type Hint } from "../retrieval/confidence.ts";
-import type { Bm25Index } from "../retrieval/types.ts";
+import { search } from "../retrieval/bm25.js";
+import { applyBoosts } from "../retrieval/boosts.js";
+import { buildHint, type Hint } from "../retrieval/confidence.js";
+import type { Bm25Index } from "../retrieval/types.js";
 
 export const searchDocsSchema = z.object({
   query: z.string().min(1).max(512),
@@ -37,7 +37,9 @@ export async function handleSearchDocs(
   });
   const boosted = applyBoosts(enriched, args.query).slice(0, limit);
   const results = boosted.map((b) => ({
-    doc_id: b.id,
+    // BM25 ids are chunk-level ("doc_id#chunkIdx") to keep the corpus distinct;
+    // strip the suffix when returning to the agent so doc_ids round-trip into fetch_doc.
+    doc_id: b.id.split("#")[0] ?? b.id,
     score: Number(b.score.toFixed(4)),
     boost_reasons: b.boost_reasons,
     snippet: b.text.slice(0, 240),
