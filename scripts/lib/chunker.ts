@@ -187,7 +187,10 @@ type SectionChunk = {
 function chunkSection(section: Section, opts: ChunkerOptions): SectionChunk[] {
   if (section.blocks.length === 0) return [];
 
-  const totalText = section.blocks.map((b) => b.text).join("\n\n").trim();
+  const totalText = section.blocks
+    .map((b) => b.text)
+    .join("\n\n")
+    .trim();
   const totalTokens = approxTokens(totalText);
 
   if (totalTokens <= opts.maxTokens) {
@@ -211,7 +214,10 @@ function chunkSection(section: Section, opts: ChunkerOptions): SectionChunk[] {
   const flushPending = () => {
     if (pending.length === 0) return;
     result.push({
-      text: pending.map((b) => b.text).join("\n\n").trim(),
+      text: pending
+        .map((b) => b.text)
+        .join("\n\n")
+        .trim(),
       atomic: false,
     });
     pending = [];
@@ -257,12 +263,7 @@ export function chunkMarkdown(
   for (const section of sections) {
     for (const sc of chunkSection(section, opts)) {
       let text = sc.text;
-      if (
-        prevText !== null &&
-        !prevAtomic &&
-        !sc.atomic &&
-        opts.overlapSentences > 0
-      ) {
+      if (prevText !== null && !prevAtomic && !sc.atomic && opts.overlapSentences > 0) {
         const overlap = lastNSentences(prevText, opts.overlapSentences);
         if (overlap.length > 0) text = `${overlap}\n\n${sc.text}`;
       }

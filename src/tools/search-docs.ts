@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { search } from "../retrieval/bm25.js";
 import { applyBoosts } from "../retrieval/boosts.js";
-import { buildHint, type Hint } from "../retrieval/confidence.js";
+import { type Hint, buildHint } from "../retrieval/confidence.js";
 import type { Bm25Index } from "../retrieval/types.js";
 
 export const searchDocsSchema = z.object({

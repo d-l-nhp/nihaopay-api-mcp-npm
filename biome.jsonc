@@ -13,6 +13,7 @@
       "assets/**",
       "build-artifacts/**",
       "src/data/generated-*.ts",
+      ".claude/**",
       "*.md",
       "**/*.yaml",
       "**/*.yml",

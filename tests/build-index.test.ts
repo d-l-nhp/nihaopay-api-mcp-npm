@@ -10,7 +10,7 @@ describe("buildIndex", () => {
     mkdirSync(join(root, "content", "test"), { recursive: true });
     writeFileSync(
       join(root, "content", "test", "sample.md"),
-      `---\nid: test/sample\ntitle: Sample\nstatus: stable\n---\n\n# H\n\nBody.\n`,
+      "---\nid: test/sample\ntitle: Sample\nstatus: stable\n---\n\n# H\n\nBody.\n",
     );
     const outFile = join(root, "bm25-index.json");
     await buildIndex({ contentDir: join(root, "content"), outFile });
@@ -24,11 +24,11 @@ describe("buildIndex", () => {
     mkdirSync(join(root, "content"), { recursive: true });
     writeFileSync(
       join(root, "content", "draft.md"),
-      `---\nid: test/draft\ntitle: D\nstatus: draft\n---\n\n# H\n\nB.\n`,
+      "---\nid: test/draft\ntitle: D\nstatus: draft\n---\n\n# H\n\nB.\n",
     );
     writeFileSync(
       join(root, "content", "stable.md"),
-      `---\nid: test/stable\ntitle: S\nstatus: stable\n---\n\n# H\n\nB.\n`,
+      "---\nid: test/stable\ntitle: S\nstatus: stable\n---\n\n# H\n\nB.\n",
     );
     const outFile = join(root, "bm25-index.json");
     await buildIndex({ contentDir: join(root, "content"), outFile });

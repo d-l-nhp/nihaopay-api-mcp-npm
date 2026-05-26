@@ -67,11 +67,7 @@ function scoreDoc(queryTokens: string[], docIdx: number, index: Bm25Index): numb
   return score;
 }
 
-export function search(
-  index: Bm25Index,
-  query: string,
-  opts: SearchOptions,
-): SearchHit[] {
+export function search(index: Bm25Index, query: string, opts: SearchOptions): SearchHit[] {
   const queryTokens = tokenize(query);
   if (queryTokens.length === 0) return [];
 

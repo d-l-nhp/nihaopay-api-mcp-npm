@@ -1,8 +1,5 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { fetchDocSchema, handleFetchDoc } from "./tools/fetch-doc.js";
 import { getErrorCodeSchema, handleGetErrorCode } from "./tools/get-error-code.js";

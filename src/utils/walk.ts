@@ -5,10 +5,7 @@ import { join } from "node:path";
  * Recursively list files under `dir` matching `predicate`. Skips the `_data/`
  * directory (handled separately by the data-modules generator).
  */
-export async function walk(
-  dir: string,
-  predicate: (path: string) => boolean,
-): Promise<string[]> {
+export async function walk(dir: string, predicate: (path: string) => boolean): Promise<string[]> {
   const out: string[] = [];
   const entries = await readdir(dir, { withFileTypes: true });
   for (const entry of entries) {
