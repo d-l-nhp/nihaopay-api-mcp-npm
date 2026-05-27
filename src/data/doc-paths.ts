@@ -3,11 +3,7 @@ import { resolve } from "node:path";
 import matter from "gray-matter";
 import { walk } from "../utils/walk.js";
 
-/**
- * Walk a content directory and build a map from frontmatter `id` to the file's
- * absolute path. fetch_doc uses this to resolve a doc_id without caring about
- * the numeric-prefix sort convention authors use on top-level subdirs.
- */
+// doc_id → absolute path; indirection needed because content dirs use numeric sort prefixes.
 export async function loadDocPaths(contentDir: string): Promise<Map<string, string>> {
   const files = await walk(contentDir, (p) => p.endsWith(".md"));
   const map = new Map<string, string>();

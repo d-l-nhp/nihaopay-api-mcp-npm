@@ -52,7 +52,7 @@ function stripHtmlComments(text: string): string {
   return text.replace(/<!--[\s\S]*?-->/g, "").trim();
 }
 
-/** Parse markdown body into a flat sequence of blocks. Headings are preserved as their own blocks. */
+/** Headings become their own blocks, not merged into surrounding prose. */
 export function parseBlocks(body: string): Block[] {
   const lines = body.split("\n");
   const blocks: Block[] = [];
@@ -77,7 +77,7 @@ export function parseBlocks(body: string): Block[] {
       const start = i;
       i++;
       while (i < lines.length && !(lines[i] ?? "").startsWith("```")) i++;
-      if (i < lines.length) i++; // consume closing fence
+      if (i < lines.length) i++;
       blocks.push({ kind: "code", text: lines.slice(start, i).join("\n") });
       continue;
     }
@@ -241,11 +241,7 @@ function chunkSection(section: Section, opts: ChunkerOptions): SectionChunk[] {
   return result;
 }
 
-/**
- * Chunk a raw markdown document (with optional YAML frontmatter) into the
- * minimal Chunk shape the retrieval layer consumes. Frontmatter is stripped;
- * its values get reattached to chunks downstream in build-index.ts.
- */
+/** Strips frontmatter; frontmatter values are reattached by the build-index caller. */
 export function chunkMarkdown(
   docId: string,
   raw: string,

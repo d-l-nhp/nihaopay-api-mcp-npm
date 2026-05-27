@@ -40,10 +40,6 @@ async function clean(): Promise<void> {
   await rm(new URL("dist", REPO_ROOT), { recursive: true, force: true });
 }
 
-// Strict artifact verification — last gate before the tarball is produced.
-// Checks every `files` entry exists and is non-empty (files by size,
-// directories by having at least one child), and that the bin import target
-// (`dist/index.js`) is present. Collects all failures and throws once.
 async function verifyArtifacts(pkg: PackageJson): Promise<void> {
   const failures: string[] = [];
 

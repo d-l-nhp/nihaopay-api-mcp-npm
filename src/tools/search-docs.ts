@@ -28,17 +28,15 @@ export async function handleSearchDocs(
   index: Bm25Index,
   opts: SearchOptions,
 ): Promise<SearchDocsResult> {
-  const limit = args.limit;
   // Over-fetch so boost re-sorting has signal beyond the top-k cutoff.
-  const raw = search(index, args.query, { limit: limit * 2 });
+  const raw = search(index, args.query, { limit: args.limit * 2 });
   const enriched = raw.map((h) => {
     const doc = index.docs.find((d) => d.id === h.id);
     return { id: h.id, score: h.score, text: doc?.text ?? "" };
   });
-  const boosted = applyBoosts(enriched, args.query).slice(0, limit);
+  const boosted = applyBoosts(enriched, args.query).slice(0, args.limit);
   const results = boosted.map((b) => ({
-    // BM25 ids are chunk-level ("doc_id#chunkIdx") to keep the corpus distinct;
-    // strip the suffix when returning to the agent so doc_ids round-trip into fetch_doc.
+    // strip chunk suffix so doc_id round-trips into fetch_doc
     doc_id: b.id.split("#")[0] ?? b.id,
     score: Number(b.score.toFixed(4)),
     boost_reasons: b.boost_reasons,
