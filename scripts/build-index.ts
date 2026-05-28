@@ -3,12 +3,24 @@ import { readFile, writeFile } from "node:fs/promises";
 import matter from "gray-matter";
 import { walk } from "../src/utils/walk.ts";
 import { type Chunk, chunkMarkdown } from "./lib/chunker.ts";
+import { type DocFrontmatter, buildHeaderChunk } from "./lib/header-chunk.ts";
 
 export type BuildIndexOptions = {
   contentDir: string;
   outFile: string;
   includeDrafts?: boolean;
 };
+
+// Strips backticks/markdown so headings like "Obtaining `open_id`" tokenize
+// the same as the prose version.
+function extractH2Headings(body: string): string[] {
+  const out: string[] = [];
+  for (const line of body.split("\n")) {
+    const m = line.match(/^##\s+(.+?)\s*$/);
+    if (m?.[1]) out.push(m[1].replace(/`/g, ""));
+  }
+  return out;
+}
 
 export async function buildIndex(opts: BuildIndexOptions): Promise<void> {
   const includeDrafts = opts.includeDrafts ?? false;
@@ -22,6 +34,15 @@ export async function buildIndex(opts: BuildIndexOptions): Promise<void> {
     if (!includeDrafts && parsed.data["status"] === "draft") continue;
     const docId = String(parsed.data["id"] ?? "");
     if (!docId) throw new Error(`Missing id in frontmatter: ${file}`);
+    const sectionHeadings = extractH2Headings(parsed.content);
+    const header = buildHeaderChunk(
+      { ...(parsed.data as DocFrontmatter), id: docId },
+      sectionHeadings,
+    );
+    if (header) {
+      chunks.push(header);
+      hash.update(JSON.stringify(header));
+    }
     const fileChunks = chunkMarkdown(docId, raw);
     for (const c of fileChunks) {
       chunks.push(c);

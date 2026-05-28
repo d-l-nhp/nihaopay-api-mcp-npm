@@ -1,4 +1,4 @@
-export type IndexedDoc = { id: string; text: string };
+export type IndexedDoc = { id: string; text: string; is_synopsis?: boolean };
 
 export type Bm25Index = {
   docs: ReadonlyArray<IndexedDoc>;

@@ -29,6 +29,7 @@ export async function loadBm25FromFile(path: string): Promise<Bm25Index> {
     // search_docs strips the suffix after '#' before returning doc_id to the agent.
     id: `${c.doc_id}#${i}`,
     text: c.text,
+    is_synopsis: c.heading === "[Synopsis]",
   }));
   return buildBm25Index(docs);
 }

@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import matter from "gray-matter";
 import { z } from "zod";
+import type { DocCatalogEntry } from "../data/doc-catalog.js";
 
 export const fetchDocSchema = z.object({
   doc_id: z
@@ -26,11 +27,11 @@ export type FetchDocResult =
 
 export async function handleFetchDoc(
   args: FetchDocArgs,
-  docPaths: ReadonlyMap<string, string>,
+  docCatalog: ReadonlyMap<string, DocCatalogEntry>,
 ): Promise<FetchDocResult> {
-  const path = docPaths.get(args.doc_id);
-  if (!path) return { error: "doc_not_found", doc_id: args.doc_id };
-  const raw = await readFile(path, "utf8");
+  const entry = docCatalog.get(args.doc_id);
+  if (!entry) return { error: "doc_not_found", doc_id: args.doc_id };
+  const raw = await readFile(entry.path, "utf8");
   const parsed = matter(raw);
   const result: Extract<FetchDocResult, { content: string }> = {
     doc_id: args.doc_id,

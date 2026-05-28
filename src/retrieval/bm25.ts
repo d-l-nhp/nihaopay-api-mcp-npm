@@ -3,7 +3,7 @@ import type { Bm25Index, IndexedDoc, SearchHit, SearchOptions } from "./types.js
 const BM25_K1 = 1.5;
 const BM25_B = 0.75;
 
-function tokenize(text: string): string[] {
+export function tokenize(text: string): string[] {
   return text.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}-]*/gu) ?? [];
 }
 

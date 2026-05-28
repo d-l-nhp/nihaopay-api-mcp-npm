@@ -32,7 +32,12 @@ export async function handleSearchDocs(
   const raw = search(index, args.query, { limit: args.limit * 2 });
   const enriched = raw.map((h) => {
     const doc = index.docs.find((d) => d.id === h.id);
-    return { id: h.id, score: h.score, text: doc?.text ?? "" };
+    return {
+      id: h.id,
+      score: h.score,
+      text: doc?.text ?? "",
+      is_synopsis: doc?.is_synopsis ?? false,
+    };
   });
   const boosted = applyBoosts(enriched, args.query).slice(0, args.limit);
   const results = boosted.map((b) => ({

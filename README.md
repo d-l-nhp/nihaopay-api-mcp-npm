@@ -24,6 +24,22 @@ npm install -g nihaopay-api-mcp
 - `fetch_doc` — full markdown for a doc by `doc_id`.
 - `get_error_code` — direct lookup for `400-23`-style codes.
 - `list_endpoints` — endpoint catalog, filterable by product/method.
+- `list_docs` — enumerate every `doc_id` with optional `product`/`type`/`prefix` filters; call this when `fetch_doc` returns `doc_not_found`.
+
+## Developing locally
+
+The published package bundles `assets/content/` and `assets/bm25-index.json` from a docs snapshot. **Both are gitignored** in this repo — a fresh `git clone` won't have any docs to serve. After cloning:
+
+```bash
+pnpm install
+pnpm fetch-docs     # populates assets/content/ from nihaopay-api-docs
+pnpm build-index    # generates assets/bm25-index.json from the content
+pnpm test           # 49 tests
+pnpm eval:smoke     # retrieval-quality bench (15 labeled queries)
+pnpm build          # tsc → dist/
+```
+
+`pnpm build-package` runs `prepack` and produces the redistributable `.tgz` with `dist/`, `bin/`, and the regenerated `assets/` payload.
 
 ## Versioning
 

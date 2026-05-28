@@ -3,6 +3,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { fetchDocSchema, handleFetchDoc } from "./tools/fetch-doc.js";
 import { getErrorCodeSchema, handleGetErrorCode } from "./tools/get-error-code.js";
+import { handleListDocs, listDocsSchema } from "./tools/list-docs.js";
 import { handleListEndpoints, listEndpointsSchema } from "./tools/list-endpoints.js";
 import { handleSearchDocs, searchDocsSchema } from "./tools/search-docs.js";
 import type { ToolContext } from "./tools/types.js";
@@ -35,6 +36,12 @@ export function buildServer(ctx: ToolContext): Server {
         description: "Enumerate API endpoints with optional product/method filters.",
         inputSchema: zodToJsonSchema(listEndpointsSchema) as Record<string, unknown>,
       },
+      {
+        name: "list_docs",
+        description:
+          "Enumerate every doc_id in the catalog (with optional product/type/prefix filters). Use this when fetch_doc returns doc_not_found or before guessing a doc_id from a URL path.",
+        inputSchema: zodToJsonSchema(listDocsSchema) as Record<string, unknown>,
+      },
     ],
   }));
 
@@ -50,7 +57,7 @@ export function buildServer(ctx: ToolContext): Server {
       }
       case "fetch_doc": {
         const parsed = fetchDocSchema.parse(args);
-        const result = await handleFetchDoc(parsed, ctx.docPaths);
+        const result = await handleFetchDoc(parsed, ctx.docCatalog);
         return { content: [{ type: "text", text: JSON.stringify(result) }] };
       }
       case "get_error_code": {
@@ -61,6 +68,11 @@ export function buildServer(ctx: ToolContext): Server {
       case "list_endpoints": {
         const parsed = listEndpointsSchema.parse(args);
         const result = await handleListEndpoints(parsed, ctx.accessors);
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      }
+      case "list_docs": {
+        const parsed = listDocsSchema.parse(args);
+        const result = await handleListDocs(parsed, ctx.docCatalog);
         return { content: [{ type: "text", text: JSON.stringify(result) }] };
       }
       default:
