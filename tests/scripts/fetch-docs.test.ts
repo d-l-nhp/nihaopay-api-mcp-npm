@@ -44,6 +44,7 @@ describe("fetchDocs", () => {
   afterEach(async () => {
     vi.restoreAllMocks();
     vi.doUnmock("node:https");
+    vi.doUnmock("node:child_process");
     await rm(workDir, { recursive: true, force: true });
   });
 
@@ -100,17 +101,23 @@ describe("fetchDocs", () => {
       await writeFile(join(stage, "evilroot", "ok.md"), "ok");
       const { mockHttpsGet } = await import("./helpers/mock-https.ts");
       mockHttpsGet({ status: 200, body: tarball });
-      vi.spyOn(await import("node:child_process"), "execFile").mockImplementation(
-        // biome-ignore lint/suspicious/noExplicitAny: spy signature
-        ((cmd: string, args: readonly string[], _opts: unknown, cb: any) => {
-          if (cmd === "tar" && args[0] === "-tzf") {
-            cb(null, { stdout: "evilroot/\nevilroot/../escape.md\n", stderr: "" });
+      vi.doMock("node:child_process", async () => {
+        const actual = await vi.importActual<typeof import("node:child_process")>("node:child_process");
+        return {
+          ...actual,
+          // biome-ignore lint/suspicious/noExplicitAny: test mock
+          execFile: (cmd: string, args: readonly string[], optsOrCb: unknown, cbArg?: any) => {
+            // biome-ignore lint/suspicious/noExplicitAny: test mock
+            const cb: any = typeof optsOrCb === "function" ? optsOrCb : cbArg;
+            if (cmd === "tar" && args[0] === "-tzf") {
+              cb(null, { stdout: "evilroot/\nevilroot/../escape.md\n", stderr: "" });
+              return undefined;
+            }
+            cb(null, { stdout: "", stderr: "" });
             return undefined;
-          }
-          cb(null, { stdout: "", stderr: "" });
-          return undefined;
-        }) as never,
-      );
+          },
+        };
+      });
       const { fetchDocs } = await import("../../scripts/fetch-docs.ts");
       await expect(
         fetchDocs({
