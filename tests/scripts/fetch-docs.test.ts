@@ -102,7 +102,8 @@ describe("fetchDocs", () => {
       const { mockHttpsGet } = await import("./helpers/mock-https.ts");
       mockHttpsGet({ status: 200, body: tarball });
       vi.doMock("node:child_process", async () => {
-        const actual = await vi.importActual<typeof import("node:child_process")>("node:child_process");
+        const actual =
+          await vi.importActual<typeof import("node:child_process")>("node:child_process");
         return {
           ...actual,
           // biome-ignore lint/suspicious/noExplicitAny: test mock
