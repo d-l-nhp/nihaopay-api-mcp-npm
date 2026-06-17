@@ -46,7 +46,9 @@ async function downloadToFile(url: string, destPath: string): Promise<string> {
       }
       const out = createWriteStream(destPath);
       res.on("data", (chunk: Buffer) => hash.update(chunk));
-      pipeline(res as Readable, out).then(resolveDl).catch(rejectDl);
+      pipeline(res as Readable, out)
+        .then(resolveDl)
+        .catch(rejectDl);
     });
     req.on("error", rejectDl);
   });

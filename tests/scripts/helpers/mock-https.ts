@@ -6,10 +6,7 @@ type MockResponse = { status: number; body: Buffer };
 
 export function mockHttpsGet(response: MockResponse): void {
   vi.doMock("node:https", () => {
-    const getImpl = (
-      _url: string,
-      cb: (res: Readable & { statusCode: number }) => void,
-    ) => {
+    const getImpl = (_url: string, cb: (res: Readable & { statusCode: number }) => void) => {
       const stream = Readable.from([response.body]) as Readable & { statusCode: number };
       stream.statusCode = response.status;
       queueMicrotask(() => cb(stream));
