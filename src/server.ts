@@ -10,7 +10,7 @@ import type { ToolContext } from "./tools/types.js";
 
 export function buildServer(ctx: ToolContext): Server {
   const server = new Server(
-    { name: "nihaopay-api-mcp", version: process.env["npm_package_version"] ?? "0.0.0" },
+    { name: "nihaopay-api-mcp", version: ctx.serverVersion },
     { capabilities: { tools: {} } },
   );
 

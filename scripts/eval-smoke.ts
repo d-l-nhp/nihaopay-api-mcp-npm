@@ -62,6 +62,21 @@ const CASES: Case[] = [
     query: "wechat mini program integration",
     assertions: [{ kind: "topDoc", docId: "payment-products/securepay/wechat-miniprogram" }],
   },
+  // Previously surfaced auto-debit/signing top 4 because that doc used the
+  // industry terms "JSAPI" and "MINI_APP" while wechat-miniprogram.md did
+  // not. Fixed by adding the terminology and a disambiguation block to the
+  // dedicated doc, plus a cross-link in securepay/standard.md.
+  {
+    name: "wechat mini program JSAPI MINI_APP integration → wechat-miniprogram in top 3",
+    query: "wechat mini program JSAPI MINI_APP integration",
+    assertions: [
+      {
+        kind: "topDocInRank",
+        docId: "payment-products/securepay/wechat-miniprogram",
+        maxRank: 3,
+      },
+    ],
+  },
 
   // testing.md regression case — withdrawal-history was winning before the
   // precision gate landed.

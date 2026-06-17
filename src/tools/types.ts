@@ -7,4 +7,5 @@ export type ToolContext = {
   bm25: Bm25Index;
   docCatalog: ReadonlyMap<string, DocCatalogEntry>;
   confidenceThreshold: number;
+  serverVersion: string;
 };

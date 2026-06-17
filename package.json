@@ -1,8 +1,11 @@
 {
   "name": "nihaopay-api-mcp",
-  "version": "0.0.0",
-  "description": "Local MCP server for Nihaopay v1.2 payment API documentation",
+  "version": "1.2.0",
+  "description": "MCP server that serves Nihaopay v1.2 payment-API documentation to LLM agents. Bundles a docs snapshot with a BM25 retrieval index; runs fully offline over stdio.",
   "license": "MIT",
+  "author": "Nihaopay <opensource@nihaopay.com>",
+  "homepage": "https://github.com/nihaopay/nihaopay-api-mcp#readme",
+  "bugs": { "url": "https://github.com/nihaopay/nihaopay-api-mcp/issues" },
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "engines": { "node": ">=22.0.0" },

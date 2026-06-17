@@ -28,18 +28,17 @@ npm install -g nihaopay-api-mcp
 
 ## Developing locally
 
-The published package bundles `assets/content/` and `assets/bm25-index.json` from a docs snapshot. **Both are gitignored** in this repo — a fresh `git clone` won't have any docs to serve. After cloning:
+The published package bundles `assets/content/` and `assets/bm25-index.json` from a docs snapshot. **Both are gitignored** in this repo — a fresh `git clone` won't have any docs to serve. You need to populate `assets/content/` manually from the upstream [`nihaopay-api-docs`](https://github.com/nihaopay/nihaopay-api-docs) snapshot (the `pnpm fetch-docs` npm script is reserved but not yet implemented). Once `assets/content/` is in place:
 
 ```bash
 pnpm install
-pnpm fetch-docs     # populates assets/content/ from nihaopay-api-docs
 pnpm build-index    # generates assets/bm25-index.json from the content
-pnpm test           # 49 tests
-pnpm eval:smoke     # retrieval-quality bench (15 labeled queries)
+pnpm test           # unit tests
+pnpm eval:smoke     # retrieval-quality bench (16 labeled queries)
 pnpm build          # tsc → dist/
 ```
 
-`pnpm build-package` runs `prepack` and produces the redistributable `.tgz` with `dist/`, `bin/`, and the regenerated `assets/` payload.
+`pnpm build-package` runs `prepack` and produces the redistributable `.tgz`. It asserts a clean working tree before packing, so commit your changes first.
 
 ## Versioning
 

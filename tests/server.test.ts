@@ -16,6 +16,7 @@ describe("buildServer", () => {
       bm25,
       docCatalog,
       confidenceThreshold: 0.5,
+      serverVersion: "0.0.0-test",
     });
     expect(server).toBeDefined();
   });
