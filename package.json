@@ -25,6 +25,7 @@
     "build": "tsc -p tsconfig.build.json",
     "build-package": "tsx scripts/build-package.ts",
     "prepack": "pnpm run build-package",
+    "smoke-package": "tsx scripts/smoke-package.ts",
     "dev": "tsx watch src/index.ts"
   },
   "dependencies": {

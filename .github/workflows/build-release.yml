@@ -1,0 +1,60 @@
+name: build-release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  static-checks:
+    name: Lint & typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  build-release:
+    name: Fetch docs, build, test & package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: fetch docs tarball
+        run: pnpm fetch-docs
+
+      - run: pnpm build-index
+      - run: pnpm test
+      - run: pnpm eval:smoke
+      - run: pnpm build
+
+      - name: pack npm package
+        run: npm pack
+
+      - name: Smoke-test packaged binary
+        run: pnpm run smoke-package
