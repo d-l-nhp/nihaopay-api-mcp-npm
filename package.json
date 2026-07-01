@@ -4,8 +4,8 @@
   "description": "MCP server that serves Nihaopay v1.2 payment-API documentation to LLM agents. Bundles a docs snapshot with a BM25 retrieval index; runs fully offline over stdio.",
   "license": "MIT",
   "author": "Nihaopay <opensource@nihaopay.com>",
-  "homepage": "https://github.com/nihaopay/nihaopay-api-mcp#readme",
-  "bugs": { "url": "https://github.com/nihaopay/nihaopay-api-mcp/issues" },
+  "homepage": "https://www.nihaopay.com",
+  "bugs": { "url": "https://github.com/d-l-nhp/nihaopay-api-mcp-npm/issues" },
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "engines": { "node": ">=22.0.0" },
@@ -43,5 +43,5 @@
     "vitest": "^2.1.0"
   },
   "keywords": ["mcp", "model-context-protocol", "nihaopay", "payments", "documentation"],
-  "repository": { "type": "git", "url": "git+https://github.com/nihaopay/nihaopay-api-mcp.git" }
+  "repository": { "type": "git", "url": "git+https://github.com/d-l-nhp/nihaopay-api-mcp-npm.git" }
 }
