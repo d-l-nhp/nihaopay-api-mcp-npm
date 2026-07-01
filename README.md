@@ -8,7 +8,46 @@ NihaoPay API MCP server npm package.
 npm install -g nihaopay-api-mcp
 ```
 
-## Add to Claude Desktop
+## Usage
+
+### Claude Code
+
+```bash
+claude mcp add nihaopay-docs -- nihaopay-mcp
+```
+
+### OpenCode
+
+Add to `opencode.json`:
+
+```json
+{
+  "mcp": {
+    "nihaopay-docs": {
+      "type": "local",
+      "command": ["nihaopay-mcp"],
+      "enabled": true
+    }
+  }
+}
+```
+
+### VSCode
+
+Add to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "nihaopay-docs": {
+      "type": "stdio",
+      "command": "nihaopay-mcp"
+    }
+  }
+}
+```
+
+### Claude Desktop
 
 ```json
 {
