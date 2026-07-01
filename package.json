@@ -1,5 +1,5 @@
 {
-  "name": "nihaopay-api-mcp",
+  "name": "@aurfy/nihaopay-api-mcp",
   "version": "1.0.0",
   "description": "MCP server that serves Nihaopay v1.2 payment-API documentation to LLM agents. Bundles a docs snapshot with a BM25 retrieval index; runs fully offline over stdio.",
   "license": "MIT",
