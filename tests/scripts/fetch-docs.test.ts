@@ -307,39 +307,42 @@ describe("fetchDocs", () => {
 });
 
 describe("resolveTagFromArgs", () => {
-  it("defaults to v<package version> when no override given", async () => {
+  it("defaults to DEFAULT_DOCS_TAG when no override given", async () => {
     const { resolveTagFromArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(resolveTagFromArgs([], "1.2.0")).toBe("v1.2.0");
+    const { DEFAULT_DOCS_TAG } = await import("../../config/docs.ts");
+    expect(resolveTagFromArgs([])).toBe(DEFAULT_DOCS_TAG);
   });
 
   it("uses explicit override when provided", async () => {
     const { resolveTagFromArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(resolveTagFromArgs(["v1.2.7"], "1.2.0")).toBe("v1.2.7");
+    expect(resolveTagFromArgs(["v1.2.7"])).toBe("v1.2.7");
   });
 
   it("rejects override without v prefix", async () => {
     const { resolveTagFromArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(() => resolveTagFromArgs(["1.3.0"], "1.2.0")).toThrow(
+    expect(() => resolveTagFromArgs(["1.3.0"])).toThrow(
       /must look like v<major>\.<minor>\.<patch>/,
     );
   });
 
   it("rejects an override tag off the documented API line", async () => {
     const { resolveTagFromArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(() => resolveTagFromArgs(["v1.3.0"], "1.2.0")).toThrow(/off the documented API line/);
+    expect(() => resolveTagFromArgs(["v1.3.0"])).toThrow(/off the documented API line/);
   });
 });
 
 describe("parseFetchArgs", () => {
-  it("defaults to v<package version> with no owner/repo override", async () => {
+  it("defaults to DEFAULT_DOCS_TAG with no owner/repo override", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(parseFetchArgs([], "1.2.0")).toEqual({ tag: "v1.2.0" });
+    const { DEFAULT_DOCS_TAG } = await import("../../config/docs.ts");
+    expect(parseFetchArgs([])).toEqual({ tag: DEFAULT_DOCS_TAG });
   });
 
   it("reads --owner and --repo as space-separated values", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(parseFetchArgs(["--owner", "d-l-nhp", "--repo", "nihaopay-api-docs"], "1.2.0")).toEqual({
-      tag: "v1.2.0",
+    const { DEFAULT_DOCS_TAG } = await import("../../config/docs.ts");
+    expect(parseFetchArgs(["--owner", "d-l-nhp", "--repo", "nihaopay-api-docs"])).toEqual({
+      tag: DEFAULT_DOCS_TAG,
       upstreamOwner: "d-l-nhp",
       upstreamRepo: "nihaopay-api-docs",
     });
@@ -347,8 +350,9 @@ describe("parseFetchArgs", () => {
 
   it("reads --owner=value and --repo=value form", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(parseFetchArgs(["--owner=d-l-nhp", "--repo=nihaopay-api-docs"], "1.2.0")).toEqual({
-      tag: "v1.2.0",
+    const { DEFAULT_DOCS_TAG } = await import("../../config/docs.ts");
+    expect(parseFetchArgs(["--owner=d-l-nhp", "--repo=nihaopay-api-docs"])).toEqual({
+      tag: DEFAULT_DOCS_TAG,
       upstreamOwner: "d-l-nhp",
       upstreamRepo: "nihaopay-api-docs",
     });
@@ -356,7 +360,7 @@ describe("parseFetchArgs", () => {
 
   it("combines owner/repo flags with a positional tag override", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(parseFetchArgs(["--owner", "d-l-nhp", "v1.2.1"], "1.2.0")).toEqual({
+    expect(parseFetchArgs(["--owner", "d-l-nhp", "v1.2.1"])).toEqual({
       tag: "v1.2.1",
       upstreamOwner: "d-l-nhp",
     });
@@ -364,18 +368,16 @@ describe("parseFetchArgs", () => {
 
   it("throws when --owner is given without a value", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(() => parseFetchArgs(["--owner"], "1.2.0")).toThrow(/--owner requires a value/);
+    expect(() => parseFetchArgs(["--owner"])).toThrow(/--owner requires a value/);
   });
 
   it("still rejects a tag override without a v prefix", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(() => parseFetchArgs(["1.3.0"], "1.2.0")).toThrow(
-      /must look like v<major>\.<minor>\.<patch>/,
-    );
+    expect(() => parseFetchArgs(["1.3.0"])).toThrow(/must look like v<major>\.<minor>\.<patch>/);
   });
 
   it("still rejects a tag override off the documented API line", async () => {
     const { parseFetchArgs } = await import("../../scripts/fetch-docs.ts");
-    expect(() => parseFetchArgs(["v1.3.0"], "1.2.0")).toThrow(/off the documented API line/);
+    expect(() => parseFetchArgs(["v1.3.0"])).toThrow(/off the documented API line/);
   });
 });

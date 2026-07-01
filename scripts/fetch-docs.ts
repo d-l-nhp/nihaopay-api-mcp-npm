@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createWriteStream } from "node:fs";
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, stat } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, rename, rm, stat } from "node:fs/promises";
 import type { IncomingMessage } from "node:http";
 import https from "node:https";
 import { tmpdir } from "node:os";
@@ -10,6 +10,7 @@ import type { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { DEFAULT_DOCS_TAG } from "../config/docs.ts";
 
 const execFileAsync = promisify(execFile);
 
@@ -201,10 +202,13 @@ async function countFiles(dir: string): Promise<number> {
   return count;
 }
 
-// derived from packageVersion, not a separate constant, so a version bump can't drift out of sync.
-function apiLineFromVersion(version: string): string {
-  const [major, minor] = version.split(".");
-  return `${major}.${minor}`;
+// derived from DEFAULT_DOCS_TAG, not a separate constant, so it can't drift out of sync.
+function apiLineFromTag(tag: string): string {
+  const match = TAG_RE.exec(tag);
+  if (!match) {
+    throw new Error(`tag must look like v<major>.<minor>.<patch> (got: ${JSON.stringify(tag)})`);
+  }
+  return `${match[1]}.${match[2]}`;
 }
 
 export function validateTag(tag: string, expectedLine: string): void {
@@ -220,10 +224,10 @@ export function validateTag(tag: string, expectedLine: string): void {
   }
 }
 
-export function resolveTagFromArgs(argv: string[], packageVersion: string): string {
+export function resolveTagFromArgs(argv: string[]): string {
   const override = argv.find((a) => !a.startsWith("-"));
-  const tag = override ?? `v${packageVersion}`;
-  validateTag(tag, apiLineFromVersion(packageVersion));
+  const tag = override ?? DEFAULT_DOCS_TAG;
+  validateTag(tag, apiLineFromTag(DEFAULT_DOCS_TAG));
   return tag;
 }
 
@@ -233,7 +237,7 @@ export type ParsedFetchArgs = {
   upstreamRepo?: string;
 };
 
-export function parseFetchArgs(argv: string[], packageVersion: string): ParsedFetchArgs {
+export function parseFetchArgs(argv: string[]): ParsedFetchArgs {
   const positionals: string[] = [];
   let upstreamOwner: string | undefined;
   let upstreamRepo: string | undefined;
@@ -266,7 +270,7 @@ export function parseFetchArgs(argv: string[], packageVersion: string): ParsedFe
     positionals.push(arg);
   }
 
-  const tag = resolveTagFromArgs(positionals, packageVersion);
+  const tag = resolveTagFromArgs(positionals);
   return {
     tag,
     ...(upstreamOwner !== undefined ? { upstreamOwner } : {}),
@@ -274,14 +278,8 @@ export function parseFetchArgs(argv: string[], packageVersion: string): ParsedFe
   };
 }
 
-async function readPackageVersion(): Promise<string> {
-  const raw = await readFile(resolve(REPO_ROOT, "package.json"), "utf8");
-  return (JSON.parse(raw) as { version: string }).version;
-}
-
 async function main(): Promise<void> {
-  const version = await readPackageVersion();
-  const opts = parseFetchArgs(process.argv.slice(2), version);
+  const opts = parseFetchArgs(process.argv.slice(2));
   await fetchDocs(opts);
 }
 
