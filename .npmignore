@@ -1,0 +1,12 @@
+src/
+scripts/
+tests/
+docs/
+.github/
+.vscode/
+tsconfig*.json
+biome.jsonc
+vitest.config.ts
+.gitignore
+.nvmrc
+.npmignore

@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# This workflow does not reference any github.event.* fields in run: blocks,
+# so the workflow-injection vectors described in
+# https://github.blog/security/vulnerability-research/how-to-catch-github-actions-workflow-injections-before-attackers-do/
+# do not apply. All shell input is fixed strings or CI-runner-provided paths.
+
+jobs:
+  static-checks:
+    name: Lint & typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  asset-dependent-checks:
+    name: Tests & retrieval bench
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Detect docs snapshot
+        id: assets
+        run: |
+          if [ -d assets/content ] && [ -n "$(ls -A assets/content 2>/dev/null)" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::assets/content/ is empty - skipping tests and eval. Populate from nihaopay-api-docs to run the full suite."
+          fi
+
+      - if: steps.assets.outputs.present == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - if: steps.assets.outputs.present == 'true'
+        run: pnpm build-index
+
+      - if: steps.assets.outputs.present == 'true'
+        run: pnpm test
+
+      - if: steps.assets.outputs.present == 'true'
+        run: pnpm eval:smoke
+
+      - if: steps.assets.outputs.present == 'true'
+        run: pnpm build

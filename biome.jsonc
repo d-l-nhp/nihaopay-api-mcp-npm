@@ -1,0 +1,101 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      "assets/**",
+      "build-artifacts/**",
+      "src/data/generated-*.ts",
+      ".claude/**",
+      "*.md",
+      "**/*.yaml",
+      "**/*.yml",
+      "pnpm-lock.yaml"
+    ]
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useNamingConvention": "off",
+        "useImportType": "error",
+        "useExportType": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noConsoleLog": "warn"
+      },
+      "complexity": {
+        "noStaticOnlyClass": "off",
+        // Conflicts with TypeScript's `noPropertyAccessFromIndexSignature`
+        // strict-mode rule, which requires bracket access for index-signature
+        // types (e.g. `process.env["X"]`). TS strict mode takes precedence.
+        "useLiteralKeys": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "arrowParentheses": "always"
+    }
+  },
+  "overrides": [
+    {
+      // Scripts, eval runner, and bin wrappers are CLI tooling; console output is the UI.
+      "include": ["scripts/**/*.ts", "eval/**/*.ts", "bin/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsoleLog": "off"
+          },
+          "style": {
+            "noUnusedTemplateLiteral": "off"
+          }
+        }
+      }
+    },
+    {
+      // Test fixtures may contain token-shaped strings intentionally.
+      "include": ["tests/fixtures/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ],
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "nihaopay-api-mcp",
+  "version": "1.2.0",
+  "description": "MCP server that serves Nihaopay v1.2 payment-API documentation to LLM agents. Bundles a docs snapshot with a BM25 retrieval index; runs fully offline over stdio.",
+  "license": "MIT",
+  "author": "Nihaopay <opensource@nihaopay.com>",
+  "homepage": "https://github.com/nihaopay/nihaopay-api-mcp#readme",
+  "bugs": { "url": "https://github.com/nihaopay/nihaopay-api-mcp/issues" },
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "engines": { "node": ">=22.0.0" },
+  "bin": { "nihaopay-mcp": "./bin/nihaopay-mcp" },
+  "files": ["dist/", "bin/", "assets/content/", "assets/bm25-index.json", "README.md", "LICENSE"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "eval:smoke": "tsx scripts/eval-smoke.ts",
+    "fetch-docs": "tsx scripts/fetch-docs.ts",
+    "build-index": "tsx scripts/build-index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "build-package": "tsx scripts/build-package.ts",
+    "prepack": "pnpm run build-package",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "gray-matter": "^4.0.3",
+    "yaml": "^2.6.0",
+    "zod": "^3.23.0",
+    "zod-to-json-schema": "^3.23.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "keywords": ["mcp", "model-context-protocol", "nihaopay", "payments", "documentation"],
+  "repository": { "type": "git", "url": "git+https://github.com/nihaopay/nihaopay-api-mcp.git" }
+}
