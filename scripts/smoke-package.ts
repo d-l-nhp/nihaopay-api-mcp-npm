@@ -33,12 +33,17 @@ async function readPkg(): Promise<PackageJson> {
   return JSON.parse(raw) as PackageJson;
 }
 
-// npm pack writes <name>-<version>.tgz into the repo root by default.
+// npm pack sanitizes scoped names in the tarball filename: @scope/name → scope-name-<version>.tgz.
+export function tarballPrefix(name: string): string {
+  return `${name.replace(/^@/, "").replace("/", "-")}-`;
+}
+
+// npm pack writes the sanitized <name>-<version>.tgz into the repo root by default.
 async function findTarball(pkg: PackageJson): Promise<string> {
   const override = process.argv[2];
   if (override) return override;
 
-  const prefix = `${pkg.name}-`;
+  const prefix = tarballPrefix(pkg.name);
   const entries = await readdir(REPO_ROOT);
   const candidate = entries.find((e) => e.startsWith(prefix) && e.endsWith(".tgz"));
   if (!candidate) {
@@ -143,7 +148,9 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((err) => {
-  console.error("smoke-package failed:", err);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error("smoke-package failed:", err);
+    process.exit(1);
+  });
+}
