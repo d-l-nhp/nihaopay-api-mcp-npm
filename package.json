@@ -1,15 +1,21 @@
 {
   "name": "@aurfy/nihaopay-api-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server that serves Nihaopay v1.2 payment-API documentation to LLM agents. Bundles a docs snapshot with a BM25 retrieval index; runs fully offline over stdio.",
   "license": "MIT",
   "author": "Nihaopay <opensource@nihaopay.com>",
   "homepage": "https://www.nihaopay.com",
-  "bugs": { "url": "https://github.com/d-l-nhp/nihaopay-api-mcp-npm/issues" },
+  "bugs": {
+    "url": "https://github.com/d-l-nhp/nihaopay-api-mcp-npm/issues"
+  },
   "type": "module",
   "packageManager": "pnpm@9.15.0",
-  "engines": { "node": ">=22.0.0" },
-  "bin": { "nihaopay-mcp": "./bin/nihaopay-mcp" },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "bin": {
+    "nihaopay-mcp": "./bin/nihaopay-mcp"
+  },
   "files": ["dist/", "bin/", "assets/content/", "assets/bm25-index.json", "README.md", "LICENSE"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -43,5 +49,8 @@
     "vitest": "^2.1.0"
   },
   "keywords": ["mcp", "model-context-protocol", "nihaopay", "payments", "documentation"],
-  "repository": { "type": "git", "url": "git+https://github.com/d-l-nhp/nihaopay-api-mcp-npm.git" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d-l-nhp/nihaopay-api-mcp-npm.git"
+  }
 }

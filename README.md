@@ -1,6 +1,6 @@
 # nihaopay-api-mcp
 
-NihaoPay API MCP server npm package.
+NihaoPay API Documentations MCP Server for agentic development workflows.
 
 ## Install
 
@@ -49,8 +49,11 @@ Add to `.vscode/mcp.json`:
 
 ### Claude Desktop
 
-```json
+> Claude Desktop app -> Settings -> Developer -> Edit Config
+
+```jsonc
 {
+  //existing configs
   "mcpServers": {
     "nihaopay-docs": { "command": "nihaopay-mcp" }
   }
